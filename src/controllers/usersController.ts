@@ -21,11 +21,12 @@ export class UsersController {
   private getUsers = async (req: Request, res: Response) => {
     try {
       const users = await this.dataBase.user.findMany();
-      return res.json(users);
+      return res.status(200).json(users);
     } catch (error) {
       const err = {
         message: "Пользователей не найдено",
       };
+      return res.status(400).send(err);
     }
   };
 
@@ -34,12 +35,12 @@ export class UsersController {
       const newUser = await this.dataBase.user.create({
         data: req.body,
       });
-      return res.json(newUser);
+      return res.status(200).json(newUser);
     } catch (error) {
       const err = {
         message: "ошибка создания пользователя",
       };
-      return res.send(err);
+      return res.status(400).send(err);
     }
   };
   private deleteUsers = async (req: Request, res: Response) => {
@@ -49,11 +50,12 @@ export class UsersController {
           id: req.params.id,
         },
       });
-      return res.json(deletedusers);
+      return res.status(200).json(deletedusers);
     } catch (error) {
       const err = {
         message: "Пользователь не найден",
       };
+      return res.status(400).send(err);
     }
   };
   private updateUsers = async (req: Request, res: Response) => {
@@ -64,11 +66,12 @@ export class UsersController {
         },
         data: req.body,
       });
-      return res.json(users);
+      return res.status(200).json(users);
     } catch (error) {
       const err = {
         message: "Ошибка данных",
       };
+      return res.status(400).send(err)
     }
   };
 }

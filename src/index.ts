@@ -1,8 +1,9 @@
 import express, { Express } from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import { UsersController } from "./controllers/usersController";
-
+import prisma from "./dataBase/prisma";
+import dotenv from "dotenv";
+import { PostController } from "./controllers/postController";
 dotenv.config();
 
 class App {
@@ -22,7 +23,11 @@ class App {
         console.log(`server is started on port ${process.env.API_PORT}`);
       });
 
-      this.app.use("/users", new UsersController().getRouter());
+      this.app.use("/api/users", new UsersController(prisma).getRouter());
+      this.app.use("/api/posts", new PostController(prisma).getRouter());
+      process.on("beforeExit", async () => {
+        await prisma.$disconnect();
+      });
     } catch (error: unknown) {
       const err = error as Error;
       console.log(err.message);
